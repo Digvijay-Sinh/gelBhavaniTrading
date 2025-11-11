@@ -1,0 +1,38 @@
+{
+    "name": "gelbhavanitradin01",
+    "version": "1.0.0",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder --win"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "electron": "^39.1.2",
+        "electron-builder": "^24.6.0"
+    },
+    "build": {
+        "appId": "com.gelbhavani.billing",
+        "productName": "GelBhavaniBilling",
+        "files": [
+            "**/*"
+        ],
+        "directories": {
+            "output": "dist",
+            "buildResources": "build"
+        },
+        "win": {
+            "target": [
+                "nsis"
+            ]
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": false
+        }
+    }
+}

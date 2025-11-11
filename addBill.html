@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Bill - Simple Billing</title>
+    <link rel="stylesheet" href="./addBill.css">
+    <style>
+        /* Top-left home button that uses existing CSS variables from addBill.css */
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: var(--primary, #2563eb);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.12s ease, background 0.12s ease;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark, #1e40af);
+        }
+        
+        @media (max-width: 480px) {
+            .home-btn {
+                top: 12px;
+                left: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="./index.html" class="home-btn" aria-label="Home">← Home</a>
+    <div class="container">
+        <div class="header">
+            <h1>Create New Bill</h1>
+            <p class="subtitle">Add invoice or spending details</p>
+        </div>
+
+        <!-- Main Bill Form -->
+        <form id="billForm" class="form-section">
+            <div class="form-header">
+                <h2>Bill Details</h2>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="billDescription">Description *</label>
+                    <input type="text" id="billDescription" placeholder="e.g., Web Design Project" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="billAmount">Amount *</label>
+                    <input type="number" id="billAmount" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="billQuantity">Quantity *</label>
+                    <input type="number" id="billQuantity" placeholder="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="billRate">Rate *</label>
+                    <input type="number" id="billRate" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="billTax">Tax % *</label>
+                    <input type="number" id="billTax" placeholder="0" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="submitBillBtn" class="btn btn-primary">Submit Bill</button>
+                <button type="button" id="addSpendingBtn" class="btn btn-secondary">+ Add Spending</button>
+            </div>
+        </form>
+
+        <!-- Spending Form (Hidden by default) -->
+        <form id="spendingForm" class="form-section hidden">
+            <div class="form-header">
+                <h2>Spending Details</h2>
+                <button type="button" id="closeSpendingBtn" class="close-btn">&times;</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="spendDescription">Description *</label>
+                    <input type="text" id="spendDescription" placeholder="e.g., Office Supplies" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="spendAmount">Amount *</label>
+                    <input type="number" id="spendAmount" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="spendQuantity">Quantity *</label>
+                    <input type="number" id="spendQuantity" placeholder="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="spendRate">Rate *</label>
+                    <input type="number" id="spendRate" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="spendDiscount">Discount % *</label>
+                    <input type="number" id="spendDiscount" placeholder="0" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="submitSpendingBtn" class="btn btn-primary">Add Spending</button>
+                <button type="button" id="cancelSpendingBtn" class="btn btn-tertiary">Cancel</button>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="message success hidden">
+            <span id="successText"></span>
+            <button type="button" class="close-msg">&times;</button>
+        </div>
+
+        <!-- Navigation Link -->
+        <div class="footer-nav">
+            <a href="./viewBill.html" class="nav-link">View All Bills & Spendings →</a>
+        </div>
+    </div>
+
+    <script src="./addBill.js"></script>
+</body>
+
+</html>

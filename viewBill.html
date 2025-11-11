@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bills - Simple Billing</title>
+    <link rel="stylesheet" href="./viewBill.css">
+    <style>
+        /* Top-left home button that uses existing CSS variables from viewBill.css */
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: var(--primary, #2563eb);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.12s ease, background 0.12s ease;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark, #1e40af);
+        }
+        
+        @media (max-width: 480px) {
+            .home-btn {
+                top: 12px;
+                left: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="./index.html" class="home-btn" aria-label="Home">← Home</a>
+    <div class="container">
+        <div class="header">
+            <h1>Bills & Spendings Report</h1>
+            <p class="subtitle">View and manage all transactions</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-section">
+            <div class="summary-card">
+                <div class="card-label">Total Bills</div>
+                <div class="card-value" id="totalBills">0</div>
+                <div class="card-subtitle" id="billsAmount">$0.00</div>
+            </div>
+            <div class="summary-card">
+                <div class="card-label">Total Spendings</div>
+                <div class="card-value" id="totalSpendings">0</div>
+                <div class="card-subtitle" id="spendingsAmount">$0.00</div>
+            </div>
+            <div class="summary-card highlight">
+                <div class="card-label">Net Profit</div>
+                <div class="card-value" id="netProfit">$0.00</div>
+                <div class="card-subtitle">Bills - Spendings</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType">
+                    <option value="all">All Transactions</option>
+                    <option value="bill">Bills Only</option>
+                    <option value="spending">Spendings Only</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <input type="search" id="searchInput" placeholder="Search by description...">
+            </div>
+            <button id="clearDataBtn" class="btn btn-danger">Clear All Data</button>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2>Transaction Details</h2>
+                <span class="record-count" id="recordCount">0 records</span>
+            </div>
+
+            <div class="table-responsive">
+                <table id="dataTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Tax/Discount %</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="empty-row">
+                            <td colspan="9">No transactions found. <a href="./addBill.html">Add one now</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Navigation Link -->
+        <div class="footer-nav">
+            <a href="./addBill.html" class="nav-link">← Back to Add Bill</a>
+        </div>
+    </div>
+
+    <script src="./viewBill.js"></script>
+</body>
+
+</html>
