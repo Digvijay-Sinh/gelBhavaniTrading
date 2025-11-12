@@ -32,6 +32,7 @@ function renderList() {
                 <td>${e.id}</td>
                 <td>${new Date(e.createdAt).toLocaleString()}</td>
                 <td>${farmerCount}</td>
+                <td>${Number(e.kulRakam).toFixed(2)}</td>
                 <td>${Number(e.totalHisaab).toFixed(2)}</td>
                 <td>${Number(e.totalKharch).toFixed(2)}</td>
                 <td style="color:${e.profitOrLoss>=0?'green':'red'}">${Number(e.profitOrLoss).toFixed(2)}</td>

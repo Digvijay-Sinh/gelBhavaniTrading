@@ -1,130 +1,325 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
-    --bg-start: #f7f9fb;
-    --bg-end: #e6f7f6;
-    --card-bg: #ffffff;
-    --muted: #6b7280;
-    --primary: #0d9488;
-    --accent: #06b6d4;
+    --primary-color: #8b5a3c;
+    --primary-light: #d4a574;
+    --primary-dark: #6b4423;
+    --secondary-color: #2c5f2d;
+    --accent-color: #e8b44f;
+    --neutral-bg: #f5f3f0;
+    --neutral-text: #333333;
+    --neutral-light: #ebebeb;
+    --border-color: #d4c4b0;
+    --success-color: #27ae60;
+    --radius: 12px;
 }
 
 html,
 body {
     height: 100%;
+    width: 100%;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+    background: linear-gradient(135deg, #f5f3f0 0%, #e8e4dc 100%);
+    color: var(--neutral-text);
+    overflow: hidden;
 }
 
-.branding-root {
-    min-height: 100vh;
+.homepage-root {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-}
-
-.brand-card {
+    height: 100vh;
     width: 100%;
-    max-width: 720px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 36px 32px;
-    box-shadow: 0 10px 30px rgba(13, 20, 30, 0.08);
-    text-align: center;
 }
 
-.logo-wrap {
+
+/* Brand Section */
+
+.brand-section {
+    flex: 1;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    margin-bottom: 18px
+    align-items: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #ffffff 0%, #faf7f2 100%);
+    border-right: 1px solid var(--border-color);
 }
 
-.logo {
-    width: 96px;
-    height: 96px;
-    border-radius: 14px;
-    display: block
+.logo-placeholder {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-svg {
+    width: 140px;
+    height: 140px;
+    filter: drop-shadow(0 8px 24px rgba(139, 90, 60, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.logo-placeholder:hover .logo-svg {
+    transform: scale(1.05);
+}
+
+.brand-info {
+    text-align: center;
+    max-width: 400px;
 }
 
 .company-name {
-    margin: 0;
-    font-size: 1.8rem;
-    color: #0f172a;
+    font-size: 36px;
     font-weight: 700;
-    letter-spacing: -0.02em
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
 }
 
 .tagline {
-    margin: 8px 0 20px;
-    color: var(--muted);
-    font-size: 0.98rem
+    font-size: 14px;
+    color: var(--secondary-color);
+    font-weight: 500;
+    margin-bottom: 28px;
+    letter-spacing: 0.3px;
 }
 
-.actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: center;
-    margin: 18px 0
+.contact-details {
+    background: linear-gradient(135deg, rgba(139, 90, 60, 0.05), rgba(232, 180, 79, 0.05));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
 }
+
+.contact-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.contact-item:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+.contact-label {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.contact-value {
+    color: var(--neutral-text);
+    font-weight: 500;
+    font-family: "Courier New", monospace;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 24px 0;
+}
+
+.description {
+    font-size: 13px;
+    color: #666666;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+
+/* Action Section */
+
+.action-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #f5f3f0 0%, #e8e4dc 100%);
+}
+
+.action-header {
+    margin-bottom: 40px;
+}
+
+.action-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 40px;
+}
+
+
+/* Button Styles */
 
 .btn {
-    padding: 12px 18px;
-    border-radius: 10px;
-    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 24px;
+    font-size: 14px;
     font-weight: 600;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
-    font-size: 0.98rem
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
 }
 
-.btn:focus {
-    outline: 3px solid rgba(6, 182, 212, 0.18)
+.btn-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-text {
+    display: inline-block;
 }
 
 .btn-primary {
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
-    box-shadow: 0 6px 18px rgba(13, 20, 30, 0.08)
+    box-shadow: 0 4px 12px rgba(139, 90, 60, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 90, 60, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
 }
 
 .btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-color), #1e4620);
+    color: white;
+    box-shadow: 0 4px 12px rgba(44, 95, 45, 0.2);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(44, 95, 45, 0.3);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.btn-tertiary {
+    background: var(--accent-color);
+    color: var(--neutral-text);
+    box-shadow: 0 4px 12px rgba(232, 180, 79, 0.2);
+}
+
+.btn-tertiary:hover {
+    background: #d89e3a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(232, 180, 79, 0.3);
+}
+
+.btn-tertiary:active {
+    transform: translateY(0);
+}
+
+.btn-outline {
     background: transparent;
-    color: var(--primary);
-    border: 1px solid rgba(13, 148, 136, 0.14)
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
-.small-note {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 0.85rem
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-outline:active {
+    transform: translateY(0);
+}
+
+.footer-note {
+    font-size: 12px;
+    color: #999999;
+    text-align: center;
+    font-weight: 400;
 }
 
 
-/* responsive tweaks */
+/* Responsive Design */
 
-@media (max-width:420px) {
-    .brand-card {
-        padding: 22px;
-        border-radius: 12px
+@media (max-width: 1024px) {
+    .homepage-root {
+        flex-direction: column;
     }
-    .logo {
-        width: 72px;
-        height: 72px
+    .brand-section,
+    .action-section {
+        flex: auto;
+        border: none;
+        padding: 40px 30px;
+    }
+    .brand-section {
+        border-bottom: 1px solid var(--border-color);
     }
     .company-name {
-        font-size: 1.35rem
+        font-size: 28px;
     }
-    .actions {
-        flex-direction: column
+    .logo-svg {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 640px) {
+    .brand-section,
+    .action-section {
+        padding: 30px 20px;
+    }
+    .company-name {
+        font-size: 24px;
+    }
+    .tagline {
+        font-size: 12px;
+    }
+    .action-header h2 {
+        font-size: 22px;
+    }
+    .action-buttons {
+        max-width: 100%;
     }
     .btn {
-        width: 100%
+        padding: 14px 20px;
+        font-size: 12px;
+    }
+    .logo-svg {
+        width: 80px;
+        height: 80px;
+    }
+    .contact-details {
+        padding: 16px;
+    }
+    .contact-item {
+        font-size: 12px;
     }
 }

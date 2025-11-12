@@ -49,6 +49,10 @@ function renderDetail() {
         <div class="summary-section">
             <div class="summary-card">
                 <div class="card-label">કુલ હિસાબ</div>
+                <div class="card-value">${Number(entry.kulRakam).toFixed(2)}</div>
+            </div>
+            <div class="summary-card">
+                <div class="card-label">ખેડૂતને આપવામાં આવેલ</div>
                 <div class="card-value">${Number(entry.totalHisaab).toFixed(2)}</div>
             </div>
             <div class="summary-card">
