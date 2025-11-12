@@ -90,7 +90,7 @@ function clearAllData() {
     try {
         const billsPath = getBillsFilePath();
         const spendingsPath = getSpendingsFilePath();
-        
+
         if (fs.existsSync(billsPath)) {
             fs.unlinkSync(billsPath);
         }

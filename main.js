@@ -31,27 +31,27 @@ function createWindow() {
 }
 
 // IPC Handlers for Data Management
-ipcMain.handle('load-bills', async () => {
+ipcMain.handle('load-bills', async() => {
     return dataManager.loadBills();
 });
 
-ipcMain.handle('load-spendings', async () => {
+ipcMain.handle('load-spendings', async() => {
     return dataManager.loadSpendings();
 });
 
-ipcMain.handle('save-bills', async (event, billsData) => {
+ipcMain.handle('save-bills', async(event, billsData) => {
     return dataManager.saveBills(billsData);
 });
 
-ipcMain.handle('save-spendings', async (event, spendingsData) => {
+ipcMain.handle('save-spendings', async(event, spendingsData) => {
     return dataManager.saveSpendings(spendingsData);
 });
 
-ipcMain.handle('clear-all-data', async () => {
+ipcMain.handle('clear-all-data', async() => {
     return dataManager.clearAllData();
 });
 
-ipcMain.handle('get-data-dir', async () => {
+ipcMain.handle('get-data-dir', async() => {
     return dataManager.getDataDir();
 });
 
