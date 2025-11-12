@@ -3,24 +3,44 @@ const path = require('path');
 const { app } = require('electron');
 
 // Determine data directory - use app directory for portable mode
-function getDataDir() {
-    if (process.env.PORTABLE_EXECUTABLE_DIR) {
-        return path.join(process.env.PORTABLE_EXECUTABLE_DIR, 'data');
+let dataDir = null;
+
+// Resolve default portable data dir when dataDir not explicitly set
+function resolvePortableDataDir() {
+    const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
+    if (portableDir && typeof portableDir === 'string' && portableDir.trim().length) {
+        return path.join(portableDir, 'data');
     }
-    return path.join(app.getPath('userData'), 'data');
+    return path.join(path.dirname(process.execPath), 'data');
 }
 
-// Ensure data directory exists and perform migration if needed
-function ensureDataDir() {
-    const dataDir = getDataDir();
-    if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-    }
+// Setter so main.js can pass the resolved data directory
+function setDataDir(dir) {
+    dataDir = dir;
+}
+
+// getDataDir returns explicitly-set dir or the resolved default
+function getDataDir() {
+    if (dataDir && typeof dataDir === 'string') return dataDir;
+    dataDir = resolvePortableDataDir();
     return dataDir;
 }
 
+// ensureDataDir uses getDataDir() (so it respects setDataDir)
+function ensureDataDir() {
+    const dir = getDataDir();
+    try {
+        fs.mkdirSync(dir, { recursive: true });
+    } catch (err) {
+        console.error('Failed to create data directory:', dir, err);
+        throw err;
+    }
+    return dir;
+}
+
+// keep your getTransactionsFilePath / loadTransactions etc. but update any direct calls
 function getTransactionsFilePath() {
-    return path.join(ensureDataDir(), 'transactions.json');
+    return path.join(getDataDir(), 'transactions.json');
 }
 
 // Load transactions (bills and spendings combined)

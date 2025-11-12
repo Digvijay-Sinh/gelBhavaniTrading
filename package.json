@@ -5,7 +5,7 @@
     "scripts": {
         "start": "electron .",
         "pack": "electron-builder --dir",
-        "dist": "electron-builder --win"
+        "dist": "electron-builder --win portable --x64"
     },
     "keywords": [],
     "author": "",
@@ -16,23 +16,21 @@
         "electron-builder": "^24.6.0"
     },
     "build": {
-        "appId": "com.gelbhavani.billing",
-        "productName": "GelBhavaniBilling",
+        "appId": "com.yourcompany.yourapp",
+        "productName": "MyApp",
         "files": [
             "**/*"
         ],
-        "directories": {
-            "output": "dist",
-            "buildResources": "build"
-        },
         "win": {
             "target": [
-                "nsis"
+                "portable"
             ]
         },
         "nsis": {
-            "oneClick": false,
             "perMachine": false
+        },
+        "portable": {
+            "artifactName": "${productName}-portable-${version}-${arch}.${ext}"
         }
     }
 }

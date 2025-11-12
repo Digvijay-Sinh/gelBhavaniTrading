@@ -6,10 +6,13 @@ let win;
 
 // Set portable mode for USB drive compatibility
 function setupPortableMode() {
-    // Get the executable's directory (where the app is running from)
-    const exePath = app.getAppPath();
-    const dataDir = path.join(exePath, 'data');
-    process.env.PORTABLE_EXECUTABLE_DIR = exePath;
+    // Ask dataManager to create/return the correct data dir, then set it explicitly
+    const dataDir = dataManager.ensureDataDir(); // creates and returns the path
+    if (typeof dataManager.setDataDir === 'function') {
+        dataManager.setDataDir(dataDir);
+    } else {
+        dataManager._dataDir = dataDir; // fallback (should not be necessary after patch)
+    }
 }
 
 function createWindow() {
@@ -95,6 +98,6 @@ ipcMain.handle('delete-transaction', async(event, id, type, parentId) => {
 
 app.whenReady().then(() => {
     setupPortableMode();
-    dataManager.ensureDataDir();
+    // dataManager.ensureDataDir();
     createWindow();
 });
