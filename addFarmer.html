@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Farmer - Gel Bhavani</title>
+    <link rel="stylesheet" href="./addBill.css">
+</head>
+
+<body>
+    <a href="./index.html" class="home-btn" aria-label="Home">← હોમ</a>
+    <div class="container">
+        <div class="header">
+            <h1>કિસાન વિગતો ઉમેરો</h1>
+            <p class="subtitle">કિસાન અને પાકની વિગતો દાખલ કરો, ગણતરીઓ આપોઆપ થશે</p>
+        </div>
+
+        <form id="farmerForm" class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="farmerName">કિસાનનું નામ *</label>
+                    <input type="text" id="farmerName" placeholder="કિસાનનું નામ" required>
+                </div>
+                <div class="form-group">
+                    <label for="bori">બોરી *</label>
+                    <input type="number" id="bori" placeholder="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="bharti">ભરતી *</label>
+                    <input type="number" id="bharti" placeholder="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="kad">કડ *</label>
+                    <input type="number" id="kad" placeholder="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="bhav">ભાવ (દર) *</label>
+                    <input type="number" id="bhav" placeholder="0" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>મણ (ગણતરી)</label>
+                    <div id="man" class="computed">0</div>
+                </div>
+                <div class="form-group">
+                    <label>કુલ હિસાબ (ગણતરી)</label>
+                    <div id="totalHisaab" class="computed">0</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="submitFarmerBtn" class="btn btn-primary">સાચવો</button>
+                <a href="./viewFarmers.html" class="btn btn-secondary">કિસાનો જુઓ</a>
+            </div>
+        </form>
+
+        <div id="message" class="message success hidden">
+            <span id="messageText"></span>
+            <button type="button" class="close-msg">&times;</button>
+        </div>
+
+    </div>
+
+    <script src="./addFarmer.js"></script>
+</body>
+
+</html>

@@ -40,87 +40,87 @@
 </head>
 
 <body>
-    <a href="./index.html" class="home-btn" aria-label="Home">← Home</a>
+    <a href="./index.html" class="home-btn" aria-label="Home">← હોમ</a>
     <div class="container">
         <div class="header">
-            <h1>Create New Bill</h1>
-            <p class="subtitle">Add invoice or spending details</p>
+            <h1>નવું બિલ બનાવો</h1>
+            <p class="subtitle">ઇનવોઇસ અથવા ખર્ચની વિગતો ઉમેરો</p>
         </div>
 
         <!-- Main Bill Form -->
         <form id="billForm" class="form-section">
             <div class="form-header">
-                <h2>Bill Details</h2>
+                <h2>બિલ વિગતો</h2>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="billDescription">Description *</label>
-                    <input type="text" id="billDescription" placeholder="e.g., Web Design Project" required>
+                    <label for="billDescription">વર્ણન *</label>
+                    <input type="text" id="billDescription" placeholder="ઉદાહરણ: પ્રોજેક્ટનું નામ" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="billAmount">Amount *</label>
+                    <label for="billAmount">રકમ *</label>
                     <input type="number" id="billAmount" placeholder="0.00" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="billQuantity">Quantity *</label>
+                    <label for="billQuantity">જથ્થો *</label>
                     <input type="number" id="billQuantity" placeholder="1" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="billRate">Rate *</label>
+                    <label for="billRate">દર *</label>
                     <input type="number" id="billRate" placeholder="0.00" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="billTax">Tax % *</label>
+                    <label for="billTax">કર % *</label>
                     <input type="number" id="billTax" placeholder="0" step="0.01" required>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="button" id="submitBillBtn" class="btn btn-primary">Submit Bill</button>
-                <button type="button" id="addSpendingBtn" class="btn btn-secondary">+ Add Spending</button>
+                <button type="button" id="submitBillBtn" class="btn btn-primary">બિલ સબમિટ કરો</button>
+                <button type="button" id="addSpendingBtn" class="btn btn-secondary">+ ખર્ચ ઉમેરો</button>
             </div>
         </form>
 
         <!-- Spending Form (Hidden by default) -->
         <form id="spendingForm" class="form-section hidden">
             <div class="form-header">
-                <h2>Spending Details</h2>
+                <h2>ખર્ચ વિગતો</h2>
                 <button type="button" id="closeSpendingBtn" class="close-btn">&times;</button>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="spendDescription">Description *</label>
-                    <input type="text" id="spendDescription" placeholder="e.g., Office Supplies" required>
+                    <label for="spendDescription">વર્ણન *</label>
+                    <input type="text" id="spendDescription" placeholder="ઉદાહરણ: ઓફિસ સપ્લાય" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="spendAmount">Amount *</label>
+                    <label for="spendAmount">રકમ *</label>
                     <input type="number" id="spendAmount" placeholder="0.00" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="spendQuantity">Quantity *</label>
+                    <label for="spendQuantity">જથ્થો *</label>
                     <input type="number" id="spendQuantity" placeholder="1" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="spendRate">Rate *</label>
+                    <label for="spendRate">દર *</label>
                     <input type="number" id="spendRate" placeholder="0.00" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="spendDiscount">Discount % *</label>
+                    <label for="spendDiscount">ડિસ્કાઉન્ટ % *</label>
                     <input type="number" id="spendDiscount" placeholder="0" step="0.01" required>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="button" id="submitSpendingBtn" class="btn btn-primary">Add Spending</button>
-                <button type="button" id="cancelSpendingBtn" class="btn btn-tertiary">Cancel</button>
+                <button type="button" id="submitSpendingBtn" class="btn btn-primary">ખર્ચ ઉમેરો</button>
+                <button type="button" id="cancelSpendingBtn" class="btn btn-tertiary">રદ કરો</button>
             </div>
         </form>
 
@@ -132,7 +132,7 @@
 
         <!-- Navigation Link -->
         <div class="footer-nav">
-            <a href="./viewBill.html" class="nav-link">View All Bills & Spendings →</a>
+            <a href="./viewBill.html" class="nav-link">બધા બિલ અને ખર્ચ જુઓ →</a>
         </div>
     </div>
 

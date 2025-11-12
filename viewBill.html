@@ -40,29 +40,29 @@
 </head>
 
 <body>
-    <a href="./index.html" class="home-btn" aria-label="Home">← Home</a>
+    <a href="./index.html" class="home-btn" aria-label="Home">← હોમ</a>
     <div class="container">
         <div class="header">
-            <h1>Bills & Spendings Report</h1>
-            <p class="subtitle">View and manage all transactions</p>
+            <h1>બિલ અને ખર્ચ રિપોર્ટ</h1>
+            <p class="subtitle">બધા ટ્રાન્ઝેક્શનો જુઓ અને મેનેજ કરો</p>
         </div>
 
         <!-- Summary Cards -->
         <div class="summary-section">
             <div class="summary-card">
-                <div class="card-label">Total Bills</div>
+                <div class="card-label">કુલ બિલો</div>
                 <div class="card-value" id="totalBills">0</div>
                 <div class="card-subtitle" id="billsAmount">$0.00</div>
             </div>
             <div class="summary-card">
-                <div class="card-label">Total Spendings</div>
+                <div class="card-label">કુલ ખર્ચ</div>
                 <div class="card-value" id="totalSpendings">0</div>
                 <div class="card-subtitle" id="spendingsAmount">$0.00</div>
             </div>
             <div class="summary-card highlight">
-                <div class="card-label">Net Profit</div>
+                <div class="card-label">કુલ નફો</div>
                 <div class="card-value" id="netProfit">$0.00</div>
-                <div class="card-subtitle">Bills - Spendings</div>
+                <div class="card-subtitle">બિલો - ખર્ચ</div>
             </div>
         </div>
 
@@ -70,35 +70,35 @@
         <div class="filters-section">
 
             <div class="filter-group">
-                <input type="search" id="searchInput" placeholder="Search by description...">
+                <input type="search" id="searchInput" placeholder="વર્ણન દ્વારા શોધો...">
             </div>
         </div>
 
         <!-- Table Section -->
         <div class="table-section">
             <div class="table-header">
-                <h2>Transaction Details</h2>
-                <span class="record-count" id="recordCount">0 records</span>
+                <h2>કરાર વિગતો</h2>
+                <span class="record-count" id="recordCount">0 રેકોર્ડ</span>
             </div>
 
             <div class="table-responsive">
                 <table id="dataTable" class="data-table">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Tax/Discount %</th>
-                            <th>Total</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th>પ્રકાર</th>
+                            <th>વર્ણન</th>
+                            <th>રકમ</th>
+                            <th>જથ્થો</th>
+                            <th>દર</th>
+                            <th>કર/ડિસ્કાઉન્ટ %</th>
+                            <th>કુલ</th>
+                            <th>તારીખ</th>
+                            <th>ક્રિયા</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         <tr class="empty-row">
-                            <td colspan="9">No transactions found. <a href="./addBill.html">Add one now</a></td>
+                            <td colspan="9">કોઈ ટ્રાન્ઝેક્શન નથી. <a href="./addBill.html">પણ ઉમેરો</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -107,7 +107,7 @@
 
         <!-- Navigation Link -->
         <div class="footer-nav">
-            <a href="./addBill.html" class="nav-link">← Back to Add Bill</a>
+            <a href="./addBill.html" class="nav-link">← બિલ ઉમેરવા પર પાછા જાઓ</a>
         </div>
     </div>
 

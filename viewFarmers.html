@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Farmers - Gel Bhavani</title>
+    <link rel="stylesheet" href="./viewBill.css">
+</head>
+
+<body>
+    <a href="./index.html" class="home-btn" aria-label="Home">← હોમ</a>
+    <div class="container">
+        <div class="header">
+            <h1>કિસાનો</h1>
+            <p class="subtitle">કિસાનોની યાદી અને તેમને માટેનો હિસાબ</p>
+        </div>
+
+        <div class="table-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h2>કિસાનો</h2>
+            <div>
+                <button id="sellTogetherBtn" class="btn btn-primary" disabled>એક સાથે વેચો</button>
+                <a href="./addFarmer.html" class="btn btn-secondary">કિસાન ઉમેરો</a>
+                <a href="./sellTogetherList.html" class="btn btn-tertiary">એકસાથે વેચવાની યાદી</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="farmersTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>નામ</th>
+                        <th>બોરી</th>
+                        <th>ભરતી</th>
+                        <th>કડ</th>
+                        <th>મણ</th>
+                        <th>ભાવ</th>
+                        <th>કુલ હિસાબ</th>
+                        <th>ક્રિયા</th>
+                    </tr>
+                </thead>
+                <tbody id="farmersBody">
+                    <tr class="empty-row">
+                        <td colspan="9">કોઈ કિસાન નથી. <a href="./addFarmer.html">હવે ઉમેરો</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="./viewFarmers.js"></script>
+</body>
+
+</html>

@@ -96,6 +96,85 @@ ipcMain.handle('delete-transaction', async(event, id, type, parentId) => {
     return dataManager.deleteTransaction(id, type, parentId);
 });
 
+// Farmers API
+ipcMain.handle('load-farmers', async() => {
+    return dataManager.loadFarmers();
+});
+
+ipcMain.handle('save-farmers', async(event, farmers) => {
+    return dataManager.saveFarmers(farmers);
+});
+
+ipcMain.handle('add-farmer', async(event, farmer) => {
+    return dataManager.addFarmer(farmer);
+});
+
+ipcMain.handle('update-farmer', async(event, farmer) => {
+    return dataManager.updateFarmer(farmer);
+});
+
+ipcMain.handle('delete-farmer', async(event, id) => {
+    return dataManager.deleteFarmer(id);
+});
+
+// SellTogether API
+ipcMain.handle('load-selltogether', async() => {
+    return dataManager.loadSellTogether();
+});
+
+ipcMain.handle('save-selltogether', async(event, entries) => {
+    return dataManager.saveSellTogether(entries);
+});
+
+ipcMain.handle('add-selltogether', async(event, entry) => {
+    // Save entry, then mark involved farmers as hidden (sold together)
+    const created = dataManager.addSellTogether(entry);
+    try {
+        if (created && Array.isArray(created.farmerIds) && created.farmerIds.length > 0) {
+            const farmers = dataManager.loadFarmers();
+            const idSet = new Set(created.farmerIds.map(String));
+            const updated = farmers.map(f => {
+                if (idSet.has(String(f.id))) {
+                    return {...f, hiddenInSellTogether: true };
+                }
+                return f;
+            });
+            dataManager.saveFarmers(updated);
+        }
+    } catch (err) {
+        console.error('Failed to mark farmers as hidden after adding sellTogether', err);
+    }
+    return created;
+});
+
+ipcMain.handle('update-selltogether', async(event, entry) => {
+    return dataManager.updateSellTogether(entry);
+});
+
+ipcMain.handle('delete-selltogether', async(event, id) => {
+    try {
+        // find entry to know which farmers were part of it
+        const entries = dataManager.loadSellTogether();
+        const idStr = String(id);
+        const entry = entries.find(e => String(e.id) === idStr);
+        // delete the entry
+        const ok = dataManager.deleteSellTogether(id);
+        // recompute hidden flags: any farmer present in remaining entries should remain hidden
+        const remaining = dataManager.loadSellTogether();
+        const remainingFarmerIds = new Set();
+        remaining.forEach(e => {
+            if (Array.isArray(e.farmerIds)) e.farmerIds.forEach(fid => remainingFarmerIds.add(String(fid)));
+        });
+        const farmers = dataManager.loadFarmers();
+        const updated = farmers.map(f => ({...f, hiddenInSellTogether: remainingFarmerIds.has(String(f.id)) }));
+        dataManager.saveFarmers(updated);
+        return ok;
+    } catch (err) {
+        console.error('Failed to delete sellTogether and update farmer flags', err);
+        return false;
+    }
+});
+
 app.whenReady().then(() => {
     setupPortableMode();
     // dataManager.ensureDataDir();

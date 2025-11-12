@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sell Together - Gel Bhavani</title>
+    <link rel="stylesheet" href="./viewBill.css">
+</head>
+
+<body>
+    <a href="./viewFarmers.html" class="home-btn" aria-label="Back">← પાછા</a>
+    <div class="container">
+        <div class="header">
+            <h1>એક સાથે વેચો</h1>
+            <p class="subtitle">પસંદ કરેલ કિસાનો અને સાથેનો ખર્ચ</p>
+        </div>
+
+        <div id="farmersList"></div>
+
+        <form id="sellForm" class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="kulRakam">કુલ રકમ *</label>
+                    <input type="number" id="kulRakam" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="majuri">મજૂરી</label>
+                    <input type="number" id="majuri" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="bardan">બરદાન</label>
+                    <input type="number" id="bardan" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="bhadu">ભાડુ</label>
+                    <input type="number" id="bhadu" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="kharch">ખર્ચ</label>
+                    <input type="number" id="kharch" step="0.01" value="0">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>કુલ હિસાબ</label>
+                    <div id="totalHisaab" class="computed">0</div>
+                </div>
+                <div class="form-group">
+                    <label>કુલ ખર્ચ</label>
+                    <div id="totalKharch" class="computed">0</div>
+                </div>
+                <div class="form-group">
+                    <label>નફો / નુકસાન</label>
+                    <div id="profitLoss" class="computed">0</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="submitSellBtn" class="btn btn-primary">એક સાથે વેચાણ બનાવો</button>
+                <a href="./sellTogetherList.html" class="btn btn-secondary">એકસાથે વેચાણ યાદી જુઓ</a>
+            </div>
+        </form>
+
+    </div>
+
+    <script src="./sellTogether.js"></script>
+</body>
+
+</html>

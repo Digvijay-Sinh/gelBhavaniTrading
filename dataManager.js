@@ -207,3 +207,154 @@ module.exports = {
     deleteTransaction,
     clearAllData
 };
+
+// Farmers and SellTogether separate files (portable, simple JSON files)
+function getFarmersFilePath() {
+    return path.join(getDataDir(), 'farmers.json');
+}
+
+function loadFarmers() {
+    try {
+        const filePath = getFarmersFilePath();
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf8');
+            return JSON.parse(data || '[]');
+        }
+        return [];
+    } catch (err) {
+        console.error('Error loading farmers:', err);
+        return [];
+    }
+}
+
+function saveFarmers(farmers) {
+    try {
+        const filePath = getFarmersFilePath();
+        fs.writeFileSync(filePath, JSON.stringify(farmers || [], null, 2), 'utf8');
+        return true;
+    } catch (err) {
+        console.error('Error saving farmers:', err);
+        return false;
+    }
+}
+
+function addFarmer(farmer) {
+    try {
+        const list = loadFarmers();
+        if (!farmer.id) farmer.id = Date.now();
+        farmer.createdAt = new Date().toISOString();
+        list.push(farmer);
+        saveFarmers(list);
+        return farmer;
+    } catch (err) {
+        console.error('Error adding farmer:', err);
+        return null;
+    }
+}
+
+function updateFarmer(updated) {
+    try {
+        const list = loadFarmers();
+        const idx = list.findIndex(f => f.id === updated.id);
+        if (idx === -1) return false;
+        updated.updatedAt = new Date().toISOString();
+        list[idx] = updated;
+        return saveFarmers(list);
+    } catch (err) {
+        console.error('Error updating farmer:', err);
+        return false;
+    }
+}
+
+function deleteFarmer(id) {
+    try {
+        const list = loadFarmers();
+        const filtered = list.filter(f => f.id !== id);
+        return saveFarmers(filtered);
+    } catch (err) {
+        console.error('Error deleting farmer:', err);
+        return false;
+    }
+}
+
+function getSellTogetherFilePath() {
+    return path.join(getDataDir(), 'sellTogether.json');
+}
+
+function loadSellTogether() {
+    try {
+        const filePath = getSellTogetherFilePath();
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf8');
+            return JSON.parse(data || '[]');
+        }
+        return [];
+    } catch (err) {
+        console.error('Error loading sellTogether entries:', err);
+        return [];
+    }
+}
+
+function saveSellTogether(entries) {
+    try {
+        const filePath = getSellTogetherFilePath();
+        fs.writeFileSync(filePath, JSON.stringify(entries || [], null, 2), 'utf8');
+        return true;
+    } catch (err) {
+        console.error('Error saving sellTogether entries:', err);
+        return false;
+    }
+}
+
+function addSellTogether(entry) {
+    try {
+        const list = loadSellTogether();
+        if (!entry.id) entry.id = Date.now();
+        entry.createdAt = new Date().toISOString();
+        list.push(entry);
+        saveSellTogether(list);
+        return entry;
+    } catch (err) {
+        console.error('Error adding sellTogether entry:', err);
+        return null;
+    }
+}
+
+function updateSellTogether(updated) {
+    try {
+        const list = loadSellTogether();
+        const idx = list.findIndex(e => e.id === updated.id);
+        if (idx === -1) return false;
+        updated.updatedAt = new Date().toISOString();
+        list[idx] = updated;
+        return saveSellTogether(list);
+    } catch (err) {
+        console.error('Error updating sellTogether entry:', err);
+        return false;
+    }
+}
+
+function deleteSellTogether(id) {
+    try {
+        const list = loadSellTogether();
+        const filtered = list.filter(e => e.id !== id);
+        return saveSellTogether(filtered);
+    } catch (err) {
+        console.error('Error deleting sellTogether entry:', err);
+        return false;
+    }
+}
+
+// Export new functions
+module.exports.getFarmersFilePath = getFarmersFilePath;
+module.exports.loadFarmers = loadFarmers;
+module.exports.saveFarmers = saveFarmers;
+module.exports.addFarmer = addFarmer;
+module.exports.updateFarmer = updateFarmer;
+module.exports.deleteFarmer = deleteFarmer;
+module.exports.getSellTogetherFilePath = getSellTogetherFilePath;
+module.exports.loadSellTogether = loadSellTogether;
+module.exports.saveSellTogether = saveSellTogether;
+module.exports.addSellTogether = addSellTogether;
+module.exports.updateSellTogether = updateSellTogether;
+module.exports.deleteSellTogether = deleteSellTogether;

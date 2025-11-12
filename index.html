@@ -29,14 +29,15 @@
             </div>
 
             <h1 class="company-name">Gel Bhavani Trading</h1>
-            <p class="tagline">Reliable billing · Simple invoicing · Fast reports</p>
+            <p class="tagline">વિશ્વસનીય બિલિંગ · સરળ ઇનવૉઈસ · ઝડપી રિપોર્ટ</p>
 
             <div class="actions">
-                <button id="addBillBtn" class="btn btn-primary" aria-label="Add Bill">Add Bill</button>
-                <button id="viewBillsBtn" class="btn btn-secondary" aria-label="View Bills">View Bills</button>
+                <button id="farmersBtn" class="btn btn-primary" aria-label="Farmers">કિસાનો</button>
+                <button id="sellTogetherBtn" class="btn btn-secondary" aria-label="Sell Together">એક સાથે વેચો</button>
+                <!-- <button id="farmersBtn" class="btn btn-tertiary" aria-label="Farmers">Farmers</button> -->
             </div>
 
-            <p class="small-note">You can replace the logo.svg with your official logo. Buttons will be wired to the app's routes or IPC later.</p>
+            <p class="small-note">તમારા અધિકૃત લોગો સાથે 'logo.svg' બદલી શકો છો. બટનો એપના પૃષ્ઠો સાથે જોડાયેલા છે.</p>
         </section>
     </main>
 
@@ -46,11 +47,11 @@
         } = require('electron');
         // Use absolute paths to the renderer entry HTML names produced by the webpack plugin.
         // In dev mode the dev server serves pages at e.g. /add_bill.html and /view_bill.html
-        document.getElementById('addBillBtn').addEventListener('click', () => {
-            ipcRenderer.send('navigate', 'addBill.html');
+        document.getElementById('farmersBtn').addEventListener('click', () => {
+            ipcRenderer.send('navigate', 'viewFarmers.html');
         });
-        document.getElementById('viewBillsBtn').addEventListener('click', () => {
-            ipcRenderer.send('navigate', 'viewBill.html');
+        document.getElementById('sellTogetherBtn').addEventListener('click', () => {
+            ipcRenderer.send('navigate', 'sellTogetherList.html');
         });
     </script>
 </body>
