@@ -2,21 +2,21 @@ let billsData = [];
 let spendingsData = [];
 let allTransactions = [];
 
+const { ipcRenderer } = require('electron');
+
 // Load data on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadDataFromStorage();
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadDataFromStorage();
     renderTable();
     updateSummary();
     attachEventListeners();
-    initializeDummyData();
+    await initializeDummyData();
 });
 
 // Initialize dummy data
-function initializeDummyData() {
+async function initializeDummyData() {
     // If there's already data in storage, do not overwrite it
-    const storedBills = localStorage.getItem('billsData');
-    const storedSpendings = localStorage.getItem('spendingsData');
-    if (storedBills || storedSpendings) return;
+    if (billsData.length > 0 || spendingsData.length > 0) return;
 
     // Add some dummy data for first-time demo
     billsData = [{
@@ -55,25 +55,30 @@ function initializeDummyData() {
         date: '11/05/2024'
     }];
 
-    saveDataToStorage();
+    await saveDataToStorage();
     combineTransactions();
 }
 
-// Load data from localStorage
-function loadDataFromStorage() {
-    const storedBills = localStorage.getItem('billsData');
-    const storedSpendings = localStorage.getItem('spendingsData');
-
-    if (storedBills) billsData = JSON.parse(storedBills);
-    if (storedSpendings) spendingsData = JSON.parse(storedSpendings);
+// Load data from JSON files via IPC
+async function loadDataFromStorage() {
+    try {
+        billsData = await ipcRenderer.invoke('load-bills');
+        spendingsData = await ipcRenderer.invoke('load-spendings');
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
 
     combineTransactions();
 }
 
-// Save data to localStorage
-function saveDataToStorage() {
-    localStorage.setItem('billsData', JSON.stringify(billsData));
-    localStorage.setItem('spendingsData', JSON.stringify(spendingsData));
+// Save data to JSON files via IPC
+async function saveDataToStorage() {
+    try {
+        await ipcRenderer.invoke('save-bills', billsData);
+        await ipcRenderer.invoke('save-spendings', spendingsData);
+    } catch (error) {
+        console.error('Error saving data:', error);
+    }
 }
 
 // Combine bills and spendings
@@ -157,14 +162,14 @@ function renderTable() {
 }
 
 // Delete transaction
-function deleteTransaction(id, type) {
+async function deleteTransaction(id, type) {
     if (!confirm('Are you sure you want to delete this transaction?')) return;
     if (type === 'bill') {
         billsData = billsData.filter(b => b.id !== id);
     } else {
         spendingsData = spendingsData.filter(s => s.id !== id);
     }
-    saveDataToStorage();
+    await saveDataToStorage();
     combineTransactions();
     renderTable();
     updateSummary();
@@ -194,11 +199,11 @@ function updateSummary() {
 }
 
 // Clear all data
-function handleClearData() {
+async function handleClearData() {
     if (!confirm('Are you sure you want to delete ALL data? This cannot be undone.')) return;
     billsData = [];
     spendingsData = [];
-    saveDataToStorage();
+    await saveDataToStorage();
     combineTransactions();
     renderTable();
     updateSummary();

@@ -2,25 +2,34 @@
 let billsData = [];
 let spendingsData = [];
 
-// Load data from localStorage on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadDataFromStorage();
+const { ipcRenderer } = require('electron');
+
+// Load data from files on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadDataFromStorage();
     attachEventListeners();
 });
 
-// Load data from localStorage
-function loadDataFromStorage() {
-    const storedBills = localStorage.getItem('billsData');
-    const storedSpendings = localStorage.getItem('spendingsData');
-
-    if (storedBills) billsData = JSON.parse(storedBills);
-    if (storedSpendings) spendingsData = JSON.parse(storedSpendings);
+// Load data from JSON files via IPC
+async function loadDataFromStorage() {
+    try {
+        billsData = await ipcRenderer.invoke('load-bills');
+        spendingsData = await ipcRenderer.invoke('load-spendings');
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showError('Failed to load data. Please try again.');
+    }
 }
 
-// Save data to localStorage
-function saveDataToStorage() {
-    localStorage.setItem('billsData', JSON.stringify(billsData));
-    localStorage.setItem('spendingsData', JSON.stringify(spendingsData));
+// Save data to JSON files via IPC
+async function saveDataToStorage() {
+    try {
+        await ipcRenderer.invoke('save-bills', billsData);
+        await ipcRenderer.invoke('save-spendings', spendingsData);
+    } catch (error) {
+        console.error('Error saving data:', error);
+        showError('Failed to save data. Please try again.');
+    }
 }
 
 // Attach event listeners
