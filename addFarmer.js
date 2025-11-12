@@ -104,7 +104,7 @@ async function handleSubmit() {
         updateComputedFields();
     } catch (err) {
         console.error(err);
-    showMessage('કિસાન સાચવવામાં નિષ્ફળતા');
+        showMessage('કિસાન સાચવવામાં નિષ્ફળતા');
     }
 }
 

@@ -95,7 +95,7 @@ async function deleteFarmer(id) {
         renderTable();
     } catch (err) {
         console.error(err);
-    alert('કાઢવામાં નિષ્ફળતા');
+        alert('કાઢવામાં નિષ્ફળતા');
     }
 }
 
