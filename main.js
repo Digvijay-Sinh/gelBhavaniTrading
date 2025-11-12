@@ -19,14 +19,27 @@ function createWindow() {
     win = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false, // prevent flicker before maximize
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         },
-
+        resizable: false, // prevent resizing
+        fullscreenable: false, // prevent full-screen toggle
+        maximizable: false, // prevent unmaximizing/maximizing manually
+        autoHideMenuBar: true, // hides the menu bar (File/Edit/etc.)
+        title: "મા આશાપુરા ટ્રેડિંગ",
     });
 
     win.loadFile('index.html');
+
+    win.once('ready-to-show', () => {
+        win.maximize();
+        win.show();
+    });
+
+    // Prevent resizing after maximize
+    win.setResizable(false);
 
     ipcMain.on('navigate', (event, page) => {
         win.loadFile(page);

@@ -16,8 +16,8 @@
         "electron-builder": "^24.6.0"
     },
     "build": {
-        "appId": "com.yourcompany.yourapp",
-        "productName": "MyApp",
+        "appId": "com.maaashapura.trading",
+        "productName": "Maa Ashapura Trading",
         "files": [
             "**/*"
         ],
