@@ -32,19 +32,32 @@ function createWindow() {
 
 // IPC Handlers for Data Management
 ipcMain.handle('load-bills', async() => {
-    return dataManager.loadBills();
+    // backward compatibility: return only bill-type transactions
+    const all = dataManager.loadTransactions();
+    return all.filter(t => t.type === 'bill');
 });
 
 ipcMain.handle('load-spendings', async() => {
-    return dataManager.loadSpendings();
+    // backward compatibility: return only spending-type transactions (those not nested)
+    const all = dataManager.loadTransactions();
+    return all.filter(t => t.type === 'spending');
 });
 
 ipcMain.handle('save-bills', async(event, billsData) => {
-    return dataManager.saveBills(billsData);
+    // backward compatibility: replace bill-type transactions and keep others
+    const all = dataManager.loadTransactions().filter(t => t.type !== 'bill');
+    // ensure bills have spendings array
+    const bills = (billsData || []).map(b => ({...b, spendings: b.spendings || [] }));
+    const merged = [...all, ...bills];
+    return dataManager.saveTransactions(merged);
 });
 
 ipcMain.handle('save-spendings', async(event, spendingsData) => {
-    return dataManager.saveSpendings(spendingsData);
+    // backward compatibility: append stand-alone spendings
+    const all = dataManager.loadTransactions().filter(t => t.type !== 'spending');
+    const spendings = (spendingsData || []).map(s => ({...s }));
+    const merged = [...all, ...spendings];
+    return dataManager.saveTransactions(merged);
 });
 
 ipcMain.handle('clear-all-data', async() => {
@@ -53,6 +66,31 @@ ipcMain.handle('clear-all-data', async() => {
 
 ipcMain.handle('get-data-dir', async() => {
     return dataManager.getDataDir();
+});
+
+// New unified transactions endpoints
+ipcMain.handle('load-transactions', async() => {
+    return dataManager.loadTransactions();
+});
+
+ipcMain.handle('save-transactions', async(event, transactions) => {
+    return dataManager.saveTransactions(transactions);
+});
+
+ipcMain.handle('add-bill', async(event, bill) => {
+    return dataManager.addBill(bill);
+});
+
+ipcMain.handle('update-bill', async(event, bill) => {
+    return dataManager.updateBill(bill);
+});
+
+ipcMain.handle('add-spending-to-bill', async(event, billId, spending) => {
+    return dataManager.addSpendingToBill(billId, spending);
+});
+
+ipcMain.handle('delete-transaction', async(event, id, type, parentId) => {
+    return dataManager.deleteTransaction(id, type, parentId);
 });
 
 app.whenReady().then(() => {

@@ -1,92 +1,49 @@
-let billsData = [];
-let spendingsData = [];
-let allTransactions = [];
+let transactions = [];
+let allTransactions = []; // flattened list for rendering (bills + nested spendings)
 
 const { ipcRenderer } = require('electron');
 
-// Load data on page load
 document.addEventListener('DOMContentLoaded', async function() {
-    await loadDataFromStorage();
+    await loadTransactions();
+    combineTransactions();
     renderTable();
     updateSummary();
     attachEventListeners();
     await initializeDummyData();
 });
 
-// Initialize dummy data
+// Initialize dummy data (first-time only)
 async function initializeDummyData() {
-    // If there's already data in storage, do not overwrite it
-    if (billsData.length > 0 || spendingsData.length > 0) return;
-
-    // Add some dummy data for first-time demo
-    billsData = [{
-            id: 1001,
-            type: 'bill',
-            description: 'Web Design Project',
-            amount: 500,
-            quantity: 2,
-            rate: 250,
-            tax: 10,
-            total: '1100.00',
-            date: '11/05/2024'
-        },
-        {
-            id: 1002,
-            type: 'bill',
-            description: 'Logo Design',
-            amount: 300,
-            quantity: 1,
-            rate: 300,
-            tax: 5,
-            total: '315.00',
-            date: '11/06/2024'
-        }
-    ];
-
-    spendingsData = [{
-        id: 2001,
-        type: 'spending',
-        description: 'Office Supplies',
-        amount: 50,
-        quantity: 2,
-        rate: 25,
-        discount: 5,
-        total: '95.00',
-        date: '11/05/2024'
-    }];
-
-    await saveDataToStorage();
+    if (transactions.length > 0) return;
+    await ipcRenderer.invoke('save-transactions', transactions);
     combineTransactions();
 }
 
-// Load data from JSON files via IPC
-async function loadDataFromStorage() {
+async function loadTransactions() {
     try {
-        billsData = await ipcRenderer.invoke('load-bills');
-        spendingsData = await ipcRenderer.invoke('load-spendings');
-    } catch (error) {
-        console.error('Error loading data:', error);
-    }
-
-    combineTransactions();
-}
-
-// Save data to JSON files via IPC
-async function saveDataToStorage() {
-    try {
-        await ipcRenderer.invoke('save-bills', billsData);
-        await ipcRenderer.invoke('save-spendings', spendingsData);
-    } catch (error) {
-        console.error('Error saving data:', error);
+        transactions = await ipcRenderer.invoke('load-transactions');
+    } catch (err) {
+        console.error('Error loading transactions', err);
+        transactions = [];
     }
 }
 
-// Combine bills and spendings
+async function saveTransactions() {
+    try {
+        await ipcRenderer.invoke('save-transactions', transactions);
+    } catch (err) {
+        console.error('Error saving transactions', err);
+    }
+}
+
+// Flatten bills and nested spendings into a list for filtering/rendering
 function combineTransactions() {
-    allTransactions = [...billsData, ...spendingsData].sort((a, b) => b.id - a.id);
+    // For rendering we keep bills as primary rows and keep spendings nested inside them.
+    // Standalone spendings (type === 'spending' without a parent) will be included as separate rows.
+    // Preserve order by bill id desc; standalone spendings will be shown by their id as well.
+    allTransactions = transactions.slice().sort((a, b) => b.id - a.id);
 }
 
-// Attach event listeners
 function attachEventListeners() {
     const filterEl = document.getElementById('filterType');
     const searchEl = document.getElementById('searchInput');
@@ -96,7 +53,6 @@ function attachEventListeners() {
     if (clearBtn) clearBtn.addEventListener('click', handleClearData);
 }
 
-// Filter transactions
 function getFilteredTransactions() {
     const filterTypeEl = document.getElementById('filterType');
     const searchEl = document.getElementById('searchInput');
@@ -104,85 +60,145 @@ function getFilteredTransactions() {
     const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
 
     let filtered = allTransactions;
-
-    if (filterType !== 'all') {
-        filtered = filtered.filter(t => t.type === filterType);
+    if (filterType === 'bill') {
+        filtered = filtered.filter(t => t.type === 'bill');
+    } else if (filterType === 'spending') {
+        // show bills that have spendings and standalone spendings
+        filtered = allTransactions.filter(t => {
+            if (t.type === 'spending') return true;
+            if (t.type === 'bill' && Array.isArray(t.spendings) && t.spendings.length > 0) return true;
+            return false;
+        });
     }
 
     if (searchTerm) {
-        filtered = filtered.filter(t =>
-            t.description.toLowerCase().includes(searchTerm)
-        );
+        filtered = filtered.filter(t => {
+            if (t.description && t.description.toLowerCase().includes(searchTerm)) return true;
+            // also check spendings descriptions when t is a bill
+            if (t.type === 'bill' && Array.isArray(t.spendings)) {
+                return t.spendings.some(s => s.description && s.description.toLowerCase().includes(searchTerm));
+            }
+            return false;
+        });
     }
 
     return filtered;
 }
 
-// Render table
 function renderTable() {
     const filteredData = getFilteredTransactions();
     const tableBody = document.getElementById('tableBody');
     const recordCount = document.getElementById('recordCount');
-
     if (!tableBody) return;
-
     if (filteredData.length === 0) {
         tableBody.innerHTML = '<tr class="empty-row"><td colspan="9">No transactions found. <a href="./addBill.html">Add one now</a></td></tr>';
         if (recordCount) recordCount.textContent = '0 records';
         return;
     }
 
-    tableBody.innerHTML = filteredData.map(transaction => {
-        const taxOrDiscount = transaction.type === 'bill' ?
-            `${transaction.tax}% Tax` :
-            `${transaction.discount}% Disc`;
+    // Build rows: each bill is a single row; spendings are displayed inside the spendings cell
+    const rows = filteredData.map(t => {
+        if (t.type === 'bill') {
+            // build spendings HTML
+            let spendingsHtml = '';
+            if (Array.isArray(t.spendings) && t.spendings.length > 0) {
+                spendingsHtml = t.spendings.map(s => {
+                    const sDesc = `${s.description} ($${parseFloat(s.total).toFixed(2)})`;
+                    // delete button for spending calls deleteTransaction(spendId, 'spending', parentBillId)
+                    return `<div class="spending-item">${escapeHtml(sDesc)}</div>`;
+                }).join('');
+            } else {
+                spendingsHtml = '<em>No spendings</em>';
+            }
 
+            return `
+                <tr class="bill-row">
+                    <td><span class="type-badge bill">bill</span></td>
+                    <td>${escapeHtml(t.description)}</td>
+                    <td>$${parseFloat(t.amount).toFixed(2)}</td>
+                    <td>${t.quantity}</td>
+                    <td>$${parseFloat(t.rate).toFixed(2)}</td>
+                    <td>${t.tax}% Tax</td>
+                    <td><strong>$${parseFloat(t.total).toFixed(2)}</strong></td>
+                    <td>${t.date}</td>
+                    <td>
+                        ${spendingsHtml}
+                        <div style="margin-top:6px">
+                            <button class="btn-edit" onclick="editBill(${t.id})">Edit</button>
+                            <button class="btn-delete" onclick="deleteTransaction(${t.id}, 'bill')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // standalone spending (no parent) - show as separate row
+        const taxOrDisc = t.type === 'spending' ? `${t.discount ?? ''}% Disc` : '';
         return `
-            <tr>
+            <tr class="spending-row">
+                <td><span class="type-badge spending">spending</span></td>
+                <td>${escapeHtml(t.description)}</td>
+                <td>$${parseFloat(t.amount).toFixed(2)}</td>
+                <td>${t.quantity}</td>
+                <td>$${parseFloat(t.rate).toFixed(2)}</td>
+                <td>${taxOrDisc}</td>
+                <td><strong>$${parseFloat(t.total).toFixed(2)}</strong></td>
+                <td>${t.date}</td>
                 <td>
-                    <span class="type-badge ${transaction.type}">
-                        ${transaction.type}
-                    </span>
-                </td>
-                <td>${transaction.description}</td>
-                <td>$${parseFloat(transaction.amount).toFixed(2)}</td>
-                <td>${transaction.quantity}</td>
-                <td>$${parseFloat(transaction.rate).toFixed(2)}</td>
-                <td>${taxOrDiscount}</td>
-                <td><strong>$${parseFloat(transaction.total).toFixed(2)}</strong></td>
-                <td>${transaction.date}</td>
-                <td>
-                    <button class="btn-delete" onclick="deleteTransaction(${transaction.id}, '${transaction.type}')">Delete</button>
+                    <button class="btn-delete" onclick="deleteTransaction(${t.id}, 'spending', null)">Delete</button>
                 </td>
             </tr>
         `;
     }).join('');
 
+    tableBody.innerHTML = rows;
     if (recordCount) recordCount.textContent = `${filteredData.length} record${filteredData.length !== 1 ? 's' : ''}`;
 }
 
-// Delete transaction
-async function deleteTransaction(id, type) {
+// delete - calls IPC and refreshes
+async function deleteTransaction(id, type, parentId) {
     if (!confirm('Are you sure you want to delete this transaction?')) return;
-    if (type === 'bill') {
-        billsData = billsData.filter(b => b.id !== id);
-    } else {
-        spendingsData = spendingsData.filter(s => s.id !== id);
+    try {
+        const ok = await ipcRenderer.invoke('delete-transaction', id, type, parentId);
+        if (!ok) throw new Error('Delete failed');
+        await loadTransactions();
+        combineTransactions();
+        renderTable();
+        updateSummary();
+    } catch (err) {
+        console.error(err);
+        showError('Failed to delete.');
     }
-    await saveDataToStorage();
-    combineTransactions();
-    renderTable();
-    updateSummary();
 }
 
-// Update summary
+function editBill(id) {
+    // navigate to addBill with editId param
+    window.location.href = `./addBill.html?editId=${id}`;
+}
+
+// small helper to escape HTML inserted into table cells
+function escapeHtml(unsafe) {
+    if (unsafe === undefined || unsafe === null) return '';
+    return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function updateSummary() {
-    const totalBillsCount = billsData.length;
-    const totalSpendingsCount = spendingsData.length;
+    // compute totals from transactions structure (bills and nested spendings)
+    const bills = transactions.filter(t => t.type === 'bill');
+    let spendings = [];
+    bills.forEach(b => { if (Array.isArray(b.spendings)) spendings = spendings.concat(b.spendings); });
+    // include standalone spendings too
+    spendings = spendings.concat(transactions.filter(t => t.type === 'spending' && !t.parentId));
 
-    const totalBillsAmount = billsData.reduce((sum, b) => sum + parseFloat(b.total), 0);
-    const totalSpendingsAmount = spendingsData.reduce((sum, s) => sum + parseFloat(s.total), 0);
-
+    const totalBillsCount = bills.length;
+    const totalSpendingsCount = spendings.length;
+    const totalBillsAmount = bills.reduce((sum, b) => sum + parseFloat(b.total || 0), 0);
+    const totalSpendingsAmount = spendings.reduce((sum, s) => sum + parseFloat(s.total || 0), 0);
     const netProfit = totalBillsAmount - totalSpendingsAmount;
 
     const totalBillsEl = document.getElementById('totalBills');
@@ -201,10 +217,18 @@ function updateSummary() {
 // Clear all data
 async function handleClearData() {
     if (!confirm('Are you sure you want to delete ALL data? This cannot be undone.')) return;
-    billsData = [];
-    spendingsData = [];
-    await saveDataToStorage();
-    combineTransactions();
-    renderTable();
-    updateSummary();
+    try {
+        await ipcRenderer.invoke('clear-all-data');
+        transactions = [];
+        combineTransactions();
+        renderTable();
+        updateSummary();
+    } catch (err) {
+        console.error(err);
+        showError('Failed to clear data');
+    }
+}
+
+function showError(message) {
+    alert(message);
 }
