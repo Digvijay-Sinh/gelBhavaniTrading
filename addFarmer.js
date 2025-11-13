@@ -58,7 +58,7 @@ function updateComputedFields() {
     const kad = readNumber('kad');
     const bhav = readNumber('bhav');
 
-    const man = bori * (bharti - kad);
+    const man = ((bori * (bharti - kad)) / 20);
     const totalHisaab = man * bhav;
 
     document.getElementById('man').textContent = Number.isFinite(man) ? man.toFixed(2) : '0';
