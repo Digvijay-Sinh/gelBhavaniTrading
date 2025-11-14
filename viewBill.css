@@ -317,6 +317,37 @@ body {
     color: #dc2626;
 }
 
+.btn-edit {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    text-decoration: underline;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+.btn-edit:hover {
+    color: var(--primary-dark);
+}
+
+.btn-download {
+    background: none;
+    border: none;
+    color: var(--success);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    text-decoration: underline;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.btn-download:hover {
+    color: #16a34a;
+}
 
 /* Footer Nav */
 
