@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 let entries = [];
 let farmers = {};
 
-document.addEventListener('DOMContentLoaded', async() => {
+document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     renderList();
 });
@@ -35,7 +35,7 @@ function renderList() {
                 <td>${Number(e.kulRakam).toFixed(2)}</td>
                 <td>${Number(e.totalHisaab).toFixed(2)}</td>
                 <td>${Number(e.totalKharch).toFixed(2)}</td>
-                <td style="color:${e.profitOrLoss>=0?'green':'red'}">${Number(e.profitOrLoss).toFixed(2)}</td>
+                <td style="color:${e.profitOrLoss >= 0 ? 'green' : 'red'}">${Number(e.profitOrLoss).toFixed(2)}</td>
                 <td>
                     <button onclick="viewDetail(${e.id})" class="btn-edit">જુઓ</button>
                     <button onclick="deleteEntry(${e.id})" class="btn-delete">કાઢો</button>
@@ -95,9 +95,9 @@ async function downloadInvoice(entryId) {
         const invoiceHTML = `
             <div style="font-family: 'Noto Sans Gujarati', Arial, sans-serif; padding: 20px; width: 190mm; background: white; margin: 0 auto;">
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
-                    <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">મા આશાપુરા ટ્રેડિંગ</h1>
+                    <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
                     <p style="font-size: 12px; color: #000; margin: 4px 0;">કૃષિ વર્તમાન અને બિલિંગ વ્યવસ્થાપન</p>
-                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9898989898 | માલિક: Raghuvirsinh Chauhan</p>
+                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
                 </div>
 
                 <h2 style="font-size: 18px; color: #000; margin-bottom: 15px; font-weight: bold;">સંયુક્ત વેચાણ બિલ</h2>
@@ -154,7 +154,7 @@ async function downloadInvoice(entryId) {
 
                 <div style="margin-top: 30px; padding-top: 12px; border-top: 1px solid #000; text-align: center; font-size: 10px; color: #000;">
                     <p style="margin: 4px 0;">આ બિલ સૃષ્ટ: ${new Date().toLocaleString('gu-IN')}</p>
-                    <p style="margin: 4px 0;">મા આશાપુરા ટ્રેડિંગ વ્યવસ્થાપન સિસ્ટમ દ્વારા</p>
+                    <p style="margin: 4px 0;">રામાધણી એન્ટરપ્રાઇઝ વ્યવસ્થાપન સિસ્ટમ દ્વારા</p>
                 </div>
             </div>
         `;

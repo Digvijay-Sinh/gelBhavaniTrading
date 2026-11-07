@@ -28,7 +28,7 @@ function createWindow() {
         fullscreenable: false, // prevent full-screen toggle
         maximizable: false, // prevent unmaximizing/maximizing manually
         autoHideMenuBar: true, // hides the menu bar (File/Edit/etc.)
-        title: "મા આશાપુરા ટ્રેડિંગ",
+        title: "રામાધણી એન્ટરપ્રાઇઝ",
     });
 
     win.loadFile('index.html');
@@ -47,99 +47,99 @@ function createWindow() {
 }
 
 // IPC Handlers for Data Management
-ipcMain.handle('load-bills', async() => {
+ipcMain.handle('load-bills', async () => {
     // backward compatibility: return only bill-type transactions
     const all = dataManager.loadTransactions();
     return all.filter(t => t.type === 'bill');
 });
 
-ipcMain.handle('load-spendings', async() => {
+ipcMain.handle('load-spendings', async () => {
     // backward compatibility: return only spending-type transactions (those not nested)
     const all = dataManager.loadTransactions();
     return all.filter(t => t.type === 'spending');
 });
 
-ipcMain.handle('save-bills', async(event, billsData) => {
+ipcMain.handle('save-bills', async (event, billsData) => {
     // backward compatibility: replace bill-type transactions and keep others
     const all = dataManager.loadTransactions().filter(t => t.type !== 'bill');
     // ensure bills have spendings array
-    const bills = (billsData || []).map(b => ({...b, spendings: b.spendings || [] }));
+    const bills = (billsData || []).map(b => ({ ...b, spendings: b.spendings || [] }));
     const merged = [...all, ...bills];
     return dataManager.saveTransactions(merged);
 });
 
-ipcMain.handle('save-spendings', async(event, spendingsData) => {
+ipcMain.handle('save-spendings', async (event, spendingsData) => {
     // backward compatibility: append stand-alone spendings
     const all = dataManager.loadTransactions().filter(t => t.type !== 'spending');
-    const spendings = (spendingsData || []).map(s => ({...s }));
+    const spendings = (spendingsData || []).map(s => ({ ...s }));
     const merged = [...all, ...spendings];
     return dataManager.saveTransactions(merged);
 });
 
-ipcMain.handle('clear-all-data', async() => {
+ipcMain.handle('clear-all-data', async () => {
     return dataManager.clearAllData();
 });
 
-ipcMain.handle('get-data-dir', async() => {
+ipcMain.handle('get-data-dir', async () => {
     return dataManager.getDataDir();
 });
 
 // New unified transactions endpoints
-ipcMain.handle('load-transactions', async() => {
+ipcMain.handle('load-transactions', async () => {
     return dataManager.loadTransactions();
 });
 
-ipcMain.handle('save-transactions', async(event, transactions) => {
+ipcMain.handle('save-transactions', async (event, transactions) => {
     return dataManager.saveTransactions(transactions);
 });
 
-ipcMain.handle('add-bill', async(event, bill) => {
+ipcMain.handle('add-bill', async (event, bill) => {
     return dataManager.addBill(bill);
 });
 
-ipcMain.handle('update-bill', async(event, bill) => {
+ipcMain.handle('update-bill', async (event, bill) => {
     return dataManager.updateBill(bill);
 });
 
-ipcMain.handle('add-spending-to-bill', async(event, billId, spending) => {
+ipcMain.handle('add-spending-to-bill', async (event, billId, spending) => {
     return dataManager.addSpendingToBill(billId, spending);
 });
 
-ipcMain.handle('delete-transaction', async(event, id, type, parentId) => {
+ipcMain.handle('delete-transaction', async (event, id, type, parentId) => {
     return dataManager.deleteTransaction(id, type, parentId);
 });
 
 // Farmers API
-ipcMain.handle('load-farmers', async() => {
+ipcMain.handle('load-farmers', async () => {
     return dataManager.loadFarmers();
 });
 
-ipcMain.handle('save-farmers', async(event, farmers) => {
+ipcMain.handle('save-farmers', async (event, farmers) => {
     return dataManager.saveFarmers(farmers);
 });
 
-ipcMain.handle('add-farmer', async(event, farmer) => {
+ipcMain.handle('add-farmer', async (event, farmer) => {
     return dataManager.addFarmer(farmer);
 });
 
-ipcMain.handle('update-farmer', async(event, farmer) => {
+ipcMain.handle('update-farmer', async (event, farmer) => {
     return dataManager.updateFarmer(farmer);
 });
 
-ipcMain.handle('delete-farmer', async(event, id) => {
+ipcMain.handle('delete-farmer', async (event, id) => {
     return dataManager.deleteFarmer(id);
 });
 
 // SellTogether API
-ipcMain.handle('load-selltogether', async() => {
+ipcMain.handle('load-selltogether', async () => {
     return dataManager.loadSellTogether();
 });
 
-ipcMain.handle('save-selltogether', async(event, entries) => {
+ipcMain.handle('save-selltogether', async (event, entries) => {
     return dataManager.saveSellTogether(entries);
 });
 
-ipcMain.handle('add-selltogether', async(event, entry) => {
+ipcMain.handle('add-selltogether', async (event, entry) => {
     // Save entry, then mark involved farmers as hidden (sold together)
     const created = dataManager.addSellTogether(entry);
     try {
@@ -148,7 +148,7 @@ ipcMain.handle('add-selltogether', async(event, entry) => {
             const idSet = new Set(created.farmerIds.map(String));
             const updated = farmers.map(f => {
                 if (idSet.has(String(f.id))) {
-                    return {...f, hiddenInSellTogether: true };
+                    return { ...f, hiddenInSellTogether: true };
                 }
                 return f;
             });
@@ -160,11 +160,11 @@ ipcMain.handle('add-selltogether', async(event, entry) => {
     return created;
 });
 
-ipcMain.handle('update-selltogether', async(event, entry) => {
+ipcMain.handle('update-selltogether', async (event, entry) => {
     return dataManager.updateSellTogether(entry);
 });
 
-ipcMain.handle('delete-selltogether', async(event, id) => {
+ipcMain.handle('delete-selltogether', async (event, id) => {
     try {
         // find entry to know which farmers were part of it
         const entries = dataManager.loadSellTogether();
@@ -179,7 +179,7 @@ ipcMain.handle('delete-selltogether', async(event, id) => {
             if (Array.isArray(e.farmerIds)) e.farmerIds.forEach(fid => remainingFarmerIds.add(String(fid)));
         });
         const farmers = dataManager.loadFarmers();
-        const updated = farmers.map(f => ({...f, hiddenInSellTogether: remainingFarmerIds.has(String(f.id)) }));
+        const updated = farmers.map(f => ({ ...f, hiddenInSellTogether: remainingFarmerIds.has(String(f.id)) }));
         dataManager.saveFarmers(updated);
         return ok;
     } catch (err) {
