@@ -73,7 +73,7 @@ async function handleSubmit() {
     const kad = readNumber('kad');
     const bhav = readNumber('bhav');
 
-    const man = bori * (bharti - kad);
+    const man = ((bori * (bharti - kad)) / 20);
     const totalHisaab = man * bhav;
 
     const farmerObj = {
