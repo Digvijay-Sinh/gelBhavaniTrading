@@ -129,7 +129,7 @@ function downloadInvoice(farmerId) {
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
                     <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
                     <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
-                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
+                    
                 </div>
 
                 <h2 style="font-size: 18px; color: #000; margin-bottom: 15px; font-weight: bold;">કિસાનનો હિસાબ</h2>
@@ -169,10 +169,7 @@ function downloadInvoice(farmerId) {
                     <p style="margin: 4px 0; font-size: 13px;"><strong>કુલ મણ:</strong> ${Number(farmer.man).toFixed(2)}</p>
                 </div>
 
-                <div style="margin-top: 30px; padding-top: 12px; border-top: 1px solid #000; text-align: center; font-size: 10px; color: #000;">
-                    <p style="margin: 4px 0;">આ હિસાબ સૃષ્ટ: ${new Date().toLocaleString('gu-IN')}</p>
-                    <p style="margin: 4px 0;">રામાધણી એન્ટરપ્રાઇઝ દ્વારા</p>
-                </div>
+                
             </div>
         `;
 
@@ -266,7 +263,7 @@ function printInvoice(farmerId) {
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
                     <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
                     <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
-                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
+                    
                 </div>
 
                 <h2 style="font-size: 18px; color: #000; margin-bottom: 15px; font-weight: bold;">કિસાનનો હિસાબ</h2>
@@ -306,10 +303,7 @@ function printInvoice(farmerId) {
                     <p style="margin: 4px 0; font-size: 13px;"><strong>કુલ મણ:</strong> ${Number(farmer.man).toFixed(2)}</p>
                 </div>
 
-                <div style="margin-top: 30px; padding-top: 12px; border-top: 1px solid #000; text-align: center; font-size: 10px; color: #000;">
-                    <p style="margin: 4px 0;">આ હિસાબ સૃષ્ટ: ${new Date().toLocaleString('gu-IN')}</p>
-                    <p style="margin: 4px 0;">રામાધણી એન્ટરપ્રાઇઝ દ્વારા</p>
-                </div>
+                
             </div>
         `;
 
