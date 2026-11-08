@@ -1,4 +1,4 @@
-# GelBhavaniBilling — Build Instructions
+# Ramadhani Enterprise Billing — Build Instructions
 
 This project is an Electron-based simple billing UI. The repository already contains an Electron entry (`main.js`) and HTML/CSS files.
 

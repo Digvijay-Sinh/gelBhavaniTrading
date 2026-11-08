@@ -20,6 +20,7 @@ function createWindow() {
         width: 800,
         height: 600,
         show: false, // prevent flicker before maximize
+        icon: path.join(__dirname, 'icon.ico'),
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,

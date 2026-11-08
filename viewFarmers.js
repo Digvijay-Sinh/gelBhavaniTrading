@@ -49,6 +49,8 @@ function renderTable() {
                   <button class="btn-edit" onclick="editFarmer(${f.id})">સંપાદિત</button>
                   <button class="btn-delete" onclick="deleteFarmer(${f.id})">કાઢો</button>
                   <button class="btn-download" onclick="downloadInvoice(${f.id})">ડાઉનલોડ</button>
+                  <button class="btn-download" onclick="printInvoice(${f.id})">Print</button>
+
                 </td>
             </tr>
         `;
@@ -126,7 +128,7 @@ function downloadInvoice(farmerId) {
             <div style="font-family: 'Noto Sans Gujarati', Arial, sans-serif; padding: 20px; width: 190mm; background: white; margin: 0 auto;">
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
                     <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
-                    <p style="font-size: 12px; color: #000; margin: 4px 0;">કૃષિ વર્તમાન અને બિલિંગ વ્યવસ્થાપન</p>
+                    <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
                     <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
                 </div>
 
@@ -245,5 +247,119 @@ function downloadInvoice(farmerId) {
     } catch (err) {
         console.error('Error:', err);
         alert('PDF બનાવવામાં નિષ્ફળતા: ' + err.message);
+    }
+}
+
+function printInvoice(farmerId) {
+    const farmer = farmers.find(f => f.id === farmerId);
+    if (!farmer) {
+        alert('કિસાનની માહિતી મળી નથી');
+        return;
+    }
+
+    try {
+        const dateStr = new Date().toLocaleDateString('gu-IN');
+
+        // Use the exact same HTML structure as your download function
+        const invoiceHTML = `
+            <div style="font-family: 'Noto Sans Gujarati', Arial, sans-serif; padding: 20px; width: 190mm; background: white; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
+                    <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
+                    <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
+                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
+                </div>
+
+                <h2 style="font-size: 18px; color: #000; margin-bottom: 15px; font-weight: bold;">કિસાનનો હિસાબ</h2>
+
+                <div style="margin-bottom: 15px; font-size: 13px;">
+                    <p style="margin: 4px 0;"><strong>કિસાનનું નામ:</strong> ${escapeHtml(farmer.name)}</p>
+                    <p style="margin: 4px 0;"><strong>તારીખ:</strong> ${dateStr}</p>
+                </div>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 12px;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">બોરી</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">ભરતી</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">કડ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 12%;">મણ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">ભાવ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: right; width: 18%;">કુલ હિસાબ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${farmer.bori}</td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${farmer.bharti}</td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${farmer.kad}</td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(farmer.man).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${farmer.bhav}</td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: right;">₹ ${Number(farmer.totalHisaab).toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 25px; background-color: #f9f9f9; padding: 12px; border: 1px solid #000;">
+                    <h3 style="font-size: 14px; margin: 0 0 8px 0; font-weight: bold;">સારાંશ:</h3>
+                    <p style="margin: 4px 0; font-size: 13px;"><strong>કુલ હિસાબ:</strong> ₹ ${Number(farmer.totalHisaab).toFixed(2)}</p>
+                    <p style="margin: 4px 0; font-size: 13px;"><strong>કુલ બોરી:</strong> ${farmer.bori}</p>
+                    <p style="margin: 4px 0; font-size: 13px;"><strong>કુલ મણ:</strong> ${Number(farmer.man).toFixed(2)}</p>
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 12px; border-top: 1px solid #000; text-align: center; font-size: 10px; color: #000;">
+                    <p style="margin: 4px 0;">આ હિસાબ સૃષ્ટ: ${new Date().toLocaleString('gu-IN')}</p>
+                    <p style="margin: 4px 0;">રામાધણી એન્ટરપ્રાઇઝ દ્વારા</p>
+                </div>
+            </div>
+        `;
+
+        // Create a hidden iframe
+        const printIframe = document.createElement('iframe');
+        printIframe.style.position = 'absolute';
+        printIframe.style.width = '0px';
+        printIframe.style.height = '0px';
+        printIframe.style.border = 'none';
+
+        document.body.appendChild(printIframe);
+
+        // Wrap the invoice HTML in a basic document structure to ensure print styles are applied
+        const printDocumentHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Print Invoice</title>
+                <style>
+                    @media print {
+                        @page { margin: 0; }
+                        body { margin: 1cm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${invoiceHTML}
+            </body>
+            </html>
+        `;
+
+        // Write content to iframe and trigger print
+        const iframeDoc = printIframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(printDocumentHTML);
+        iframeDoc.close();
+
+        // Wait for the iframe content to fully load before printing
+        printIframe.onload = function () {
+            printIframe.contentWindow.focus();
+            printIframe.contentWindow.print();
+
+            // Clean up the iframe after the print dialog closes
+            setTimeout(() => {
+                document.body.removeChild(printIframe);
+            }, 1000);
+        };
+
+    } catch (err) {
+        console.error('Print Error:', err);
+        alert('પ્રિન્ટ કરવામાં નિષ્ફળતા: ' + err.message);
     }
 }

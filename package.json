@@ -1,5 +1,5 @@
 {
-    "name": "gelbhavanitradin01",
+    "name": "ramadhani-enterprise",
     "version": "1.0.0",
     "main": "main.js",
     "scripts": {
@@ -16,12 +16,16 @@
         "electron-builder": "^24.6.0"
     },
     "build": {
-        "appId": "com.maaashapura.trading",
-        "productName": "Maa Ashapura Trading",
+        "appId": "com.ramadhani.enterprise",
+        "productName": "Ramadhani Enterprise",
+        "directories": {
+            "buildResources": "build"
+        },
         "files": [
             "**/*"
         ],
         "win": {
+            "icon": "build/icon.ico",
             "target": [
                 "portable"
             ]

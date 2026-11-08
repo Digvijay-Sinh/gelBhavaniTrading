@@ -39,7 +39,9 @@ function renderList() {
                 <td>
                     <button onclick="viewDetail(${e.id})" class="btn-edit">જુઓ</button>
                     <button onclick="deleteEntry(${e.id})" class="btn-delete">કાઢો</button>
-                    <button class="btn-download" onclick="downloadInvoice(${e.id})">ડાઉનલોડ</button>                </td>
+                    <button class="btn-download" onclick="downloadInvoice(${e.id})">ડાઉનલોડ</button>
+                    <button class="btn-download" onclick="printInvoice(${e.id})">Print</button> 
+                    </td>
             </tr>
         `;
     }).join('');
@@ -96,7 +98,7 @@ async function downloadInvoice(entryId) {
             <div style="font-family: 'Noto Sans Gujarati', Arial, sans-serif; padding: 20px; width: 190mm; background: white; margin: 0 auto;">
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
                     <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
-                    <p style="font-size: 12px; color: #000; margin: 4px 0;">કૃષિ વર્તમાન અને બિલિંગ વ્યવસ્થાપન</p>
+                    <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
                     <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
                 </div>
 
@@ -230,6 +232,152 @@ async function downloadInvoice(entryId) {
     } catch (err) {
         console.error('Error:', err);
         alert('PDF બનાવવામાં નિષ્ફળતા: ' + err.message);
+    }
+}
+
+async function printInvoice(entryId) {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry) {
+        alert('પ્રવેશની માહિતી મળી નથી');
+        return;
+    }
+
+    try {
+        const dateStr = new Date().toLocaleDateString('gu-IN');
+
+        // Build farmers rows
+        const farmersRows = (entry.farmerIds || []).map(id => {
+            const f = farmers[id];
+            if (!f) return '';
+            return `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;">${escapeHtml(f.name)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(f.bori).toFixed(0)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(f.bharti).toFixed(0)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(f.kad).toFixed(0)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(f.man).toFixed(2)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Number(f.bhav).toFixed(2)}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: right;">₹ ${Number(f.totalHisaab).toFixed(2)}</td>
+                </tr>
+            `;
+        }).join('');
+
+        // Create HTML content for invoice
+        const invoiceHTML = `
+            <div style="font-family: 'Noto Sans Gujarati', Arial, sans-serif; padding: 20px; width: 190mm; background: white; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 12px;">
+                    <h1 style="font-size: 24px; color: #000; margin: 0 0 8px 0; font-weight: bold;">રામાધણી એન્ટરપ્રાઇઝ</h1>
+                    <p style="font-size: 12px; color: #000; margin: 4px 0;">GST: 24BOFPC2636N1ZZ</p>
+                    <p style="font-size: 11px; color: #000; margin: 4px 0;">ફોન: 9687276849 | માલિક: Raghuvirsinh Chauhan</p>
+                </div>
+
+                <h2 style="font-size: 18px; color: #000; margin-bottom: 15px; font-weight: bold;">સંયુક્ત વેચાણ બિલ</h2>
+
+                <div style="margin-bottom: 15px; font-size: 13px;">
+                    <p style="margin: 4px 0;"><strong>બિલ નંબર:</strong> ${escapeHtml(entry.id)}</p>
+                    <p style="margin: 4px 0;"><strong>તારીખ:</strong> ${dateStr}</p>
+                    <p style="margin: 4px 0;"><strong>બનાવ્યું:</strong> ${new Date(entry.createdAt).toLocaleString('gu-IN')}</p>
+                </div>
+
+                <h3 style="font-size: 16px; color: #000; margin: 20px 0 10px 0; font-weight: bold;">કિસાનોની વિગતો</h3>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 12px;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: left; width: 22%;">કિસાન</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">બોરી</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">ભરતી</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">કડ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 12%;">મણ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 10%;">ભાવ</th>
+                            <th style="border: 1px solid #000; padding: 8px; text-align: right; width: 16%;">કુલ હિસાબ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${farmersRows}
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 25px; border: 2px solid #000; padding: 15px;">
+                    <h3 style="font-size: 16px; margin: 0 0 12px 0; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 8px;">આર્થિક સારાંશ</h3>
+                    
+                    <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 6px 0; border-bottom: 1px solid #ddd;"><strong>કુલ રકમ (વેચાણ):</strong></td>
+                            <td style="padding: 6px 0; text-align: right; border-bottom: 1px solid #ddd;">₹ ${Number(entry.kulRakam).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0; border-bottom: 1px solid #ddd;"><strong>ખેડૂતને આપવામાં આવેલ:</strong></td>
+                            <td style="padding: 6px 0; text-align: right; border-bottom: 1px solid #ddd;">₹ ${Number(entry.totalHisaab).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0; border-bottom: 1px solid #ddd;"><strong>કુલ ખર્ચ:</strong></td>
+                            <td style="padding: 6px 0; text-align: right; border-bottom: 1px solid #ddd;">₹ ${Number(entry.totalKharch).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px 0; font-size: 15px;"><strong>નફો / નુકસાન:</strong></td>
+                            <td style="padding: 10px 0; text-align: right; font-size: 15px; font-weight: bold; color: ${entry.profitOrLoss >= 0 ? '#006400' : '#8B0000'};">
+                                ₹ ${Number(entry.profitOrLoss).toFixed(2)}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 12px; border-top: 1px solid #000; text-align: center; font-size: 10px; color: #000;">
+                    <p style="margin: 4px 0;">આ બિલ સૃષ્ટ: ${new Date().toLocaleString('gu-IN')}</p>
+                    <p style="margin: 4px 0;">રામાધણી એન્ટરપ્રાઇઝ વ્યવસ્થાપન સિસ્ટમ દ્વારા</p>
+                </div>
+            </div>
+        `;
+
+        // Create a hidden iframe
+        const printIframe = document.createElement('iframe');
+        printIframe.style.position = 'absolute';
+        printIframe.style.width = '0px';
+        printIframe.style.height = '0px';
+        printIframe.style.border = 'none';
+
+        document.body.appendChild(printIframe);
+
+        // Wrap the invoice HTML in a basic document structure
+        const printDocumentHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Print Joint Bill</title>
+                <style>
+                    @media print {
+                        @page { margin: 0; }
+                        body { margin: 1cm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${invoiceHTML}
+            </body>
+            </html>
+        `;
+
+        // Write content to iframe and trigger print
+        const iframeDoc = printIframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(printDocumentHTML);
+        iframeDoc.close();
+
+        // Wait for the iframe content to fully load before printing
+        printIframe.onload = function () {
+            printIframe.contentWindow.focus();
+            printIframe.contentWindow.print();
+
+            // Clean up the iframe after the print dialog closes
+            setTimeout(() => {
+                document.body.removeChild(printIframe);
+            }, 1000);
+        };
+
+    } catch (err) {
+        console.error('Print Error:', err);
+        alert('પ્રિન્ટ કરવામાં નિષ્ફળતા: ' + err.message);
     }
 }
 
